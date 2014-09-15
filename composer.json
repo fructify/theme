@@ -1,0 +1,22 @@
+{
+	"name":"brads/larapress",
+	"type":"wordpress-theme",
+	"description": "A WordPress theme with Laravel API Goodness :) ",
+	"homepage": "https://github.com/brad-jones/larapress",
+	"keywords": ["larapress", "wordpress", "laravel"],
+	"license": "MIT",
+	"autoload":
+	{
+		"psr-4":
+		{
+			"LaraPress\\": "./classes"
+		}
+	},
+	"require":
+	{
+		"composer/installers": "*",
+		"gears/blade": "*",
+		"gears/router": "*",
+		"gears/session": "*"
+	}
+}

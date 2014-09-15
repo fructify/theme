@@ -9,7 +9,7 @@
 	{
 		"psr-4":
 		{
-			"LaraPress\\": "./classes"
+			"Fructify\\": "./classes"
 		}
 	},
 	"require":

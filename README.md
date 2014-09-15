@@ -1,4 +1,4 @@
-larapress
-=========
+Fructify Wordpress Theme
+================================================================================
 
-A WordPress theme with Laravel API Goodness :)
+A WordPress theme with Laravel API Fruitfulness.

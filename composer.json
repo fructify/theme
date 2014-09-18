@@ -18,5 +18,9 @@
 		"gears/blade": "*",
 		"gears/router": "*",
 		"gears/session": "*"
+	},
+	"extra":
+	{
+		"installer-name": "fructify"
 	}
 }

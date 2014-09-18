@@ -17,10 +17,10 @@
 if (!defined('ABSPATH')) exit;
 
 /*
- * Some people may use this theme, separate from my WordPress project.
+ * Some people may use this theme, separate from the main WordPress project.
  * For more info on the WordPress composer project, checkout:
  * 
- *     https://github.com/brad-jones/wordpress
+ *     https://github.com/fructify/wordpress
  * 
  * So it is possible that the composer autoloader has not yet been required.
  * Lets test if we can find our bootloader class. If the class does not exist
@@ -46,7 +46,13 @@ if (!class_exists('Fructify\Bootloader'))
 	}
 }
 
-// Now lets check to see if a child theme has already booted up LaraPress.
+/*
+ * According to the wordpress documenation a child theme's functions.php file
+ * will be included before the parent theme. So we need a way to work out
+ * if our bootloader has already been run of now.
+ * 
+ * For more info on child themes see: http://codex.wordpress.org/Child_Themes
+ */
 if (!Fructify\Bootloader::isBooted())
 {
 	/*

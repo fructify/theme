@@ -17,10 +17,12 @@
 		"composer/installers": "*",
 		"gears/blade": "*",
 		"gears/router": "*",
-		"gears/session": "*"
+		"gears/session": "*",
+		"gears/assetmini": "*"
 	},
 	"extra":
 	{
-		"installer-name": "fructify"
+		"installer-name": "fructify",
+		"assetmini-dir": "./theme-assets"
 	}
 }

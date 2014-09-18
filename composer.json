@@ -1,9 +1,9 @@
 {
-	"name":"brads/larapress",
+	"name":"fructify/theme",
 	"type":"wordpress-theme",
 	"description": "A WordPress theme with Laravel API Goodness :) ",
-	"homepage": "https://github.com/brad-jones/larapress",
-	"keywords": ["larapress", "wordpress", "laravel"],
+	"homepage": "https://github.com/fructify/theme",
+	"keywords": ["fructify", "wordpress", "laravel"],
 	"license": "MIT",
 	"autoload":
 	{

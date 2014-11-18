@@ -148,8 +148,11 @@ class Bootloader
 				$collate = DB_COLLATE;
 			}
 
-			\Gears\Session::install
-			(
+			// Create the new session handler
+			$session = new \Gears\Session
+			([
+				'name' => 'wordpress-session',
+				'dbConfig' =>
 				[
 					'driver'    => 'mysql',
 					'host'      => DB_HOST,
@@ -159,55 +162,12 @@ class Bootloader
 					'charset'   => DB_CHARSET,
 					'collation' => $collate,
 					'prefix'    => $GLOBALS['wpdb']->prefix,
-				],
-				'sessions',
-				'wordpress-session'
-			);
+				]
+			]);
+
+			// Install the Session API
+			$session->install(true);
 		}
-	}
-
-	/**
-	 * Method: install_assetmini
-	 * =========================================================================
-	 * Another one of my projects that I use often is AssetMini.
-	 * This installs the AssetMini minfication system if it exists.
-	 * For more info checkout:
-	 * 
-	 *     https://github.com/phpgearbox/assetmini
-	 *
-	 * Parameters:
-	 * -------------------------------------------------------------------------
-	 * n/a
-	 *
-	 * Returns:
-	 * -------------------------------------------------------------------------
-	 * void
-	 */
-	public function install_assetmini()
-	{
-		// Check to see if AssetMini exists.
-		// I am not expecting everyone to use it.
-		if (!class_exists('\Gears\AssetMini')) return;
-
-		/*
-		 * The WP_ENV comes from https://github.com/brad-jones/wordpress
-		 * Thus we can't assume it exists. But if it does we will use
-		 * it to our advantage.
-		 */
-		if (defined('WP_ENV'))
-		{
-			if (WP_ENV == 'local')
-			{
-				\Gears\AssetMini::setDebug(true);
-			}
-			else
-			{
-				\Gears\AssetMini::setDebug(false);
-			}
-		}
-
-		// Install asset mini globally, so we can call Asset::???()
-		\Gears\AssetMini::globalise();
 	}
 
 	/**
@@ -241,7 +201,8 @@ class Bootloader
 		$views_paths[] = Paths::parentTheme().'/views';
 
 		// Install Blade
-		\Gears\View::install($views_paths, $cache_path);
+		$views = new \Gears\View($views_paths, ['cachePath' => $cache_path]);
+		$views->globalise();
 	}
 
 	/**
@@ -270,9 +231,15 @@ class Bootloader
 			// Are we being run from a child theme?
 			if (Paths::currentTheme() != Paths::parentTheme())
 			{
+				$router1 = new \Gears\Router
+				([
+					'routesPath' => Paths::currentTheme().'/routes',
+					'notFound' => false
+				]);
+
 				try
 				{
-					\Gears\Router::install(Paths::currentTheme().'/routes', false);
+					$router1->dispatch();
 				}
 				catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e)
 				{
@@ -295,7 +262,12 @@ class Bootloader
 			 * theme. Or that the child theme router returned a 404. Either way
 			 * we will now run a second router, pointing to our route files.
 			 */
-			\Gears\Router::install(Paths::parentTheme().'/routes', $notfound);
+			$router2 = new \Gears\Router
+			([
+				'routesPath' => Paths::parentTheme().'/routes',
+				'notFound' => $notfound
+			]);
+			$router2->dispatch();
 
 			// The router by default exits php after it has done it's thing.
 			// Statements after here are pointless...

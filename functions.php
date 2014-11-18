@@ -39,7 +39,7 @@ if (!class_exists('Fructify\Bootloader'))
 	else
 	{
 		// Houston... We Have A Problem!
-		throw new Exception
+		throw new RuntimeException
 		(
 			'The Composer Autoloader Could Not Be Found @ '.$autoloader
 		);
@@ -49,7 +49,7 @@ if (!class_exists('Fructify\Bootloader'))
 /*
  * According to the wordpress documenation a child theme's functions.php file
  * will be included before the parent theme. So we need a way to work out
- * if our bootloader has already been run of now.
+ * if our bootloader has already been run or not.
  * 
  * For more info on child themes see: http://codex.wordpress.org/Child_Themes
  */

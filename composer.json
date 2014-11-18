@@ -15,7 +15,7 @@
 	"require":
 	{
 		"composer/installers": "*",
-		"gears/blade": "*",
+		"gears/view": "*",
 		"gears/router": "*",
 		"gears/session": "*"
 	},

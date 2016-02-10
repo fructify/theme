@@ -14,7 +14,7 @@
 	},
 	"require":
 	{
-		"composer/installers": "*",
+		"composer/installers": "1.0.*",
 		"gears/view": "*",
 		"gears/router": "*",
 		"gears/session": "*"

@@ -9,15 +9,15 @@
 	{
 		"psr-4":
 		{
-			"Fructify\\": "./classes"
+			"Fructify\\": "./lib"
 		}
 	},
 	"require":
 	{
-		"composer/installers": "1.0.*",
-		"gears/view": "*",
-		"gears/router": "*",
-		"gears/session": "*"
+		"composer/installers": "^1.0",
+		"league/plates": "^3.1",
+		"league/route": "^1.2",
+		"php-di/php-di": "^5.2"
 	},
 	"extra":
 	{

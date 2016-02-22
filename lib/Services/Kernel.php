@@ -28,12 +28,6 @@ class Kernel implements IKernel
 
     /**
      * @Inject
-     * @var IRouter
-     */
-    private $router;
-
-    /**
-     * @Inject
      * @var Finder
      */
     private $finder;
@@ -46,39 +40,6 @@ class Kernel implements IKernel
 
     /** @inheritdoc */
     public function boot()
-    {
-        $this->registerRouter();
-        $this->registerHooks();
-    }
-
-    /**
-     * Registers the PSR-7 Router after "wp_loaded".
-     *
-     * The router is so key to the whole theme that we
-     * set it up here instead of in a hook file.
-     *
-     * @return void
-     */
-    private function registerRouter()
-    {
-        add_action('wp_loaded', function()
-        {
-            // We only want the router to run for requests that get
-            // funneled through index.php by the .htaccess rewrite rules.
-            // wp-admin, wp-cron, wp-login, xmlrpc, etc should run as expected.
-            if ($_SERVER['SCRIPT_NAME'] == '/index.php')
-            {
-                $this->router->dispatch();
-            }
-        });
-    }
-
-    /**
-     * Registers any hook files.
-     *
-     * @return void
-     */
-    private function registerHooks()
     {
         // Where are our hooks located?
         $parentHooks = $this->config->paths->theme->parent->hooks;

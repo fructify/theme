@@ -22,4 +22,32 @@ interface IKernel
      * @return void
      */
     public function boot();
+
+    /**
+     * If the kernel in running via a child theme then this will return true.
+     *
+     * @return boolean
+     */
+    public function hasChildTheme();
+
+    /**
+     * If the child theme has a hooks folder this will return true.
+     *
+     * @return boolean
+     */
+    public function childHasHooks();
+
+    /**
+     * If the child theme has a routes folder this will return true.
+     *
+     * @return boolean
+     */
+    public function childHasRoutes();
+
+    /**
+     * If the child theme has a views folder this will return true.
+     *
+     * @return boolean
+     */
+    public function childHasViews();
 }

@@ -15,7 +15,6 @@
 
 use Fructify\Contracts\IKernel;
 use Fructify\Contracts\IRouter;
-use Symfony\Component\Finder\Finder;
 use Interop\Container\ContainerInterface as IContainer;
 use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
 
@@ -45,38 +44,92 @@ class Kernel implements IKernel
         // Where are our hooks located?
         $parentHooks = $this->config->paths->theme->parent->hooks;
         $childHooks = $this->config->paths->theme->child->hooks;
-        $files = $this->finder->files()->name('*.php')->in($parentHooks);
-        if ($parentHooks != $childHooks && is_dir($childHooks))
+
+        // Loop through our hook files
+        foreach ($this->finder->create()->files()->name('*.php')->in($parentHooks) as $file)
         {
-            $files = $files->in($childHooks);
+            if ($this->childHasHooks())
+            {
+                // Only register one of our hooks if the child theme
+                // does not have the same hook file.
+                if (!file_exists(str_replace($parentHooks, $childHooks, $file)))
+                {
+                    $this->registerHook($file);
+                }
+            }
+            else
+            {
+                $this->registerHook($file);
+            }
         }
 
-        // Loop through the hook files
-        foreach ($files as $file)
+        // Now lets loop through the child theme hooks
+        if ($this->childHasHooks())
         {
-            // Create a closure that will include the hook file.
-            $closure = function() use ($file) { return include($file); };
-
-            // Unbind the closure from this class.
-            // ie: Make it so in the included file ```$this``` is undefined.
-            $unBoundClosure = $closure->bindTo(null);
-
-            // Call the closure, it can return the actual hook closure.
-            // This is so hooks may have dependecies injected into them.
-            // Sometimes though, hooks are super simple and don't require
-            // any dependecies in which case they do not need to return a
-            // closure and can add their hooks directly.
-            $hookClosure = call_user_func($unBoundClosure);
-
-            // Now use the container to call the hook closure.
-            // php-di will inject dependecies as needed.
-            if ($hookClosure instanceof \Closure)
+            foreach ($this->finder->create()->files()->name('*.php')->in($childHooks) as $file)
             {
-                $this->container->call($hookClosure,
-                [
-                    'config' => $this->config
-                ]);
+                $this->registerHook($file);
             }
+        }
+    }
+
+    /** @inheritdoc */
+    public function hasChildTheme()
+    {
+        return
+        (
+            $this->config->paths->theme->parent->root
+            !=
+            $this->config->paths->theme->child->root
+        );
+    }
+
+    /** @inheritdoc */
+    public function childHasHooks()
+    {
+        if (!$this->hasChildTheme()) return false;
+
+        return is_dir($this->config->paths->theme->child->hooks);
+    }
+
+    /** @inheritdoc */
+    public function childHasRoutes()
+    {
+        if (!$this->hasChildTheme()) return false;
+
+        return is_dir($this->config->paths->theme->child->routes);
+    }
+
+    /** @inheritdoc */
+    public function childHasViews()
+    {
+        if (!$this->hasChildTheme()) return false;
+
+        return is_dir($this->config->paths->theme->child->views);
+    }
+
+    private function registerHook($file)
+    {Finder::create()
+
+        // Unbind the closure from this class.
+        // ie: Make it so in the included file ```$this``` is undefined.
+        $unBoundClosure = $closure->bindTo(null);
+
+        // Call the closure, it can return the actual hook closure.
+        // This is so hooks may have dependecies injected into them.
+        // Sometimes though, hooks are super simple and don't require
+        // any dependecies in which case they do not need to return a
+        // closure and can add their hooks directly.
+        $hookClosure = call_user_func($unBoundClosure);
+
+        // Now use the container to call the hook closure.
+        // php-di will inject dependecies as needed.
+        if ($hookClosure instanceof \Closure)
+        {
+            $this->container->call($hookClosure,
+            [
+                'config' => $this->config
+            ]);
         }
     }
 }

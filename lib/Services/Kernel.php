@@ -16,7 +16,7 @@
 use Fructify\Contracts\IKernel;
 use Fructify\Contracts\IRouter;
 use Interop\Container\ContainerInterface as IContainer;
-use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
+use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 
 class Kernel implements IKernel
 {
@@ -46,7 +46,7 @@ class Kernel implements IKernel
         $childHooks = $this->config->paths->theme->child->hooks;
 
         // Loop through our hook files
-        foreach ($this->finder->create()->files()->name('*.php')->in($parentHooks) as $file)
+        foreach ($this->finder->createFinder()->files()->name('*.php')->in($parentHooks) as $file)
         {
             if ($this->childHasHooks())
             {
@@ -66,7 +66,7 @@ class Kernel implements IKernel
         // Now lets loop through the child theme hooks
         if ($this->childHasHooks())
         {
-            foreach ($this->finder->create()->files()->name('*.php')->in($childHooks) as $file)
+            foreach ($this->finder->createFinder()->files()->name('*.php')->in($childHooks) as $file)
             {
                 $this->registerHook($file);
             }

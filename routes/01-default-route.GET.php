@@ -17,7 +17,7 @@ use Foil\Contracts\EngineInterface as IView;
 use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 use League\Route\RouteCollectionInterface as IRouteCollection;
-use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
+use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 
 /**
  * Default Route Generator.
@@ -57,7 +57,7 @@ return function(IRouteCollection $route, IFinderFactory $finder, $config)
 	$childPages = $config->paths->theme->child->views.'/pages';
 
 	// Find all files in our pages folder.
-	$files = $finder->create()->files()->name('*.php')->in($parentPages);
+	$files = $finder->createFinder()->files()->name('*.php')->in($parentPages);
 
 	// If the we have a child theme and it has a pages folder,
 	// lets find all files in that folder too.

@@ -21,7 +21,7 @@ use Zend\Diactoros\ServerRequestFactory as R;
 use Zend\Diactoros\Response\SapiEmitter;
 use League\Route\RouteCollection;
 use League\Route\Strategy\ParamStrategy;
-use Dflydev\Symfony\FinderFactory;
+use Dflydev\Symfony\FinderFactory\FinderFactory;
 
 // Import interfaces
 use Fructify\Contracts;
@@ -29,7 +29,7 @@ use Foil\Contracts\EngineInterface as IView;
 use Interop\Container\ContainerInterface as IContainer;
 use Zend\Diactoros\Response\EmitterInterface as IEmitter;
 use League\Route\Strategy\StrategyInterface as IStrategy;
-use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
+use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 use League\Route\RouteCollectionInterface as IRouteCollection;
 use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;

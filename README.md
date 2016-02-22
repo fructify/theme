@@ -1,4 +1,4 @@
 Fructify Wordpress Theme
 ================================================================================
 
-A WordPress theme with Laravel API Fruitfulness.
+A WordPress theme with Modern PHP Goodness :)

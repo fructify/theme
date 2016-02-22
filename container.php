@@ -16,6 +16,8 @@
 // Import concretions
 use Foil\Foil;
 use Fructify\Services;
+use Aura\Session\Session;
+use Aura\Session\SessionFactory;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory as R;
 use Zend\Diactoros\Response\SapiEmitter;
@@ -25,7 +27,9 @@ use Dflydev\Symfony\FinderFactory\FinderFactory;
 
 // Import interfaces
 use Fructify\Contracts;
+use Aura\Session\SegmentInterface as ISession;
 use Foil\Contracts\EngineInterface as IView;
+use Fructify\Contracts\IMiddleware;
 use Interop\Container\ContainerInterface as IContainer;
 use Zend\Diactoros\Response\EmitterInterface as IEmitter;
 use League\Route\Strategy\StrategyInterface as IStrategy;
@@ -99,6 +103,33 @@ return
     // -------------------------------------------------------------------------
     IServerRequest::class => DI\factory(function(){ return R::fromGlobals(); }),
 
+    // Setup Aura Session
+    // -------------------------------------------------------------------------
+    // TODO...
+    // -------------------------------------------------------------------------
+    Session::class => DI\factory(function(IContainer $c)
+    {
+        $session = (new SessionFactory)->newInstance
+        (
+            $c->get(IServerRequest::class)->getCookieParams()
+        );
+
+        $session->setName($c->get('config')->session->name);
+
+        $session->setCookieParams((array)$c->get('config')->session->cookie);
+
+        return $session;
+    }),
+
+    // Typehint against this interface, if you only need one "segment".
+    ISession::class => DI\factory(function(IContainer $c)
+    {
+        return $c->get(Session::class)->getSegment
+        (
+            $c->get('config')->session->name
+        );
+    }),
+
     // Setup the League Router
     // -------------------------------------------------------------------------
     // Our router wraps around the league/route package.
@@ -157,9 +188,10 @@ return
     // -------------------------------------------------------------------------
     // Here we define some additional interface to class mappings.
     // -------------------------------------------------------------------------
+    IResponse::class => DI\object(Response::class),
     IEmitter::class => DI\object(SapiEmitter::class),
     IFinderFactory::class => DI\object(FinderFactory::class),
-    IResponse::class => DI\object(Response::class)->scope(DI\Scope::PROTOTYPE),
+    Contracts\IMiddleware::class => DI\object(Services\Middleware::class),
     Contracts\IRouter::class => DI\object(Services\Router::class),
     Contracts\IKernel::class => DI\object(Services\Kernel::class)
 ];

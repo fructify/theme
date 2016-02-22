@@ -27,6 +27,23 @@ return
         'env' => FRUCTIFY_ENV
     ],
 
+    // Session Settings
+    // -------------------------------------------------------------------------
+    // TODO...
+    // -------------------------------------------------------------------------
+    'session' =>
+    [
+        'name' => 'FRUCTIFY',
+        'cookie' =>
+        [
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => '',
+            'secure' => false,
+            'httponly' => true
+        ]
+    ],
+
     // Database Connection Details
     // -------------------------------------------------------------------------
     // Add the database connection details into the container,
@@ -63,14 +80,16 @@ return
                 'root' => __DIR__,
                 'hooks' => __DIR__.'/hooks',
                 'views' => __DIR__.'/views',
-                'routes' => __DIR__.'/routes'
+                'routes' => __DIR__.'/routes',
+                'middleware' => __DIR__.'/middleware'
             ],
             'child' =>
             [
                 'root' => get_stylesheet_directory(),
                 'hooks' => get_stylesheet_directory().'/hooks',
                 'views' => get_stylesheet_directory().'/views',
-                'routes' => get_stylesheet_directory().'/routes'
+                'routes' => get_stylesheet_directory().'/routes',
+                'middleware' => get_stylesheet_directory().'/middleware'
             ]
         ]
     ],
@@ -82,6 +101,16 @@ return
     // rendered instead of letting the Exception go unhandled.
     // -------------------------------------------------------------------------
     'notFound' => 'errors/404',
+
+    // Friendly Error View
+    // -------------------------------------------------------------------------
+    // While running on a production environment, when any exception or
+    // catchable error is encounted after the ErrorHandler middleware has been
+    // registered in the stack, this is the view that will be rendered by the
+    // ErrorHandler. On staging and development environments filp/whoops will
+    // output a detailed exception report.
+    // -------------------------------------------------------------------------
+    'friendlyError' => 'errors/500',
 
     // Container Cache Driver
     // -------------------------------------------------------------------------

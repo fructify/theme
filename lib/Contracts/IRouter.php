@@ -13,22 +13,20 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
+use Psr\Http\Message\ResponseInterface as IResponse;
+use Psr\Http\Message\ServerRequestInterface as IServerRequest;
+
 interface IRouter
 {
     /**
      * Runs the underlying router.
      *
      * This method will dispatch the request to a route handler,
-     * it will then send the response to the browser.
+     * it will then return a response object.
      *
      * 404 Exceptions will be caught and dealt with appropriately.
      *
-     * Finally once a response has been sent to the browser the router will
-     * "exit" the PHP process to ensure no further erroneous content gets added.
-     *
-     * __THERE IS NO POINT ADDING CODE AFTER CALLING THIS METHOD!__
-     *
-     * @return void
+     * @return IResponse
      */
-    public function dispatch();
+    public function dispatch(IServerRequest $request, IResponse $response);
 }

@@ -14,7 +14,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use Fructify\Contracts\IKernel;
-use Fructify\Contracts\IRouter;
 use Interop\Container\ContainerInterface as IContainer;
 use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 
@@ -108,6 +107,20 @@ class Kernel implements IKernel
         return is_dir($this->config->paths->theme->child->views);
     }
 
+    /** @inheritdoc */
+    public function childHasMiddleware()
+    {
+        if (!$this->hasChildTheme()) return false;
+
+        return is_dir($this->config->paths->theme->child->middleware);
+    }
+
+    /**
+     * Registers/Runs a Hook File.
+     *
+     * @param  string $file The filepath to where the hook exists.
+     * @return void
+     */
     private function registerHook($file)
     {
         // Create a closure that will include the hook file.
@@ -130,6 +143,7 @@ class Kernel implements IKernel
         {
             $this->container->call($hookClosure,
             [
+                // Hooks may also depend on the container config
                 'config' => $this->config
             ]);
         }

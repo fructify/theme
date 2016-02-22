@@ -13,19 +13,19 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-use Fructify\Contracts\IRouter;
+use Fructify\Contracts\IMiddleware;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 
-return function(IServerRequest $request, IRouter $router)
+return function(IServerRequest $request, IMiddleware $middleware)
 {
-    add_action('wp_loaded', function() use ($request, $router)
+    add_action('wp_loaded', function() use ($request, $middleware)
     {
-        // We only want the router to run for requests that get
+        // We only want to run our middleware stack for requests that get
         // funneled through index.php by the .htaccess rewrite rules.
         // wp-admin, wp-cron, wp-login, xmlrpc, etc should run as expected.
         if ($request->getServerParams()['SCRIPT_NAME'] == '/index.php')
         {
-            $router->dispatch();
+            $middleware->dispatch();
         }
     });
 };

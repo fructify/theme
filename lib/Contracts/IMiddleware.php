@@ -1,4 +1,4 @@
-<?php
+<?php namespace Fructify\Contracts;
 ////////////////////////////////////////////////////////////////////////////////
 //             ___________                     __   __  _____
 //             \_   _____/______ __ __   _____/  |_|__|/ ____\__ __
@@ -13,17 +13,19 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Removes trailing slashes.
- *
- * Wordpress always likes to append a trailing slash to everything.
- * Having a trailing slash followed by nothing makes no logical sense.
- * It also causes issues for URL re-writing and other link concatination tasks.
- * Thus here we remove the trailing slashes from all permalinks.
- *
- * > NOTE: In the .htaccess file there are also rules to redirect to
- * > non-trailing slash versions of any urls requested.
- */
-$linkFixer = function($link){ return untrailingslashit($link); };
-add_filter('page_link', $linkFixer);
-add_filter('post_type_link', $linkFixer);
+interface IMiddleware
+{
+    /**
+     * Runs the underlying middleware dispatcher.
+     *
+     * This method will dispatch the request to the middleware stack.
+     * Once a response has been sent to the browser this method will
+     * "exit" the PHP process to ensure no further erroneous content
+     * gets sent.
+     *
+     * __THERE IS NO POINT ADDING CODE AFTER CALLING THIS METHOD!__
+     *
+     * @return void
+     */
+    public function dispatch();
+}

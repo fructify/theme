@@ -13,12 +13,9 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-use League\Route\Http\Exception\NotFoundException;
-
 use Fructify\Contracts\IRouter;
 use Foil\Contracts\EngineInterface as IView;
 use Interop\Container\ContainerInterface as IContainer;
-use Zend\Diactoros\Response\EmitterInterface as IEmitter;
 use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 use League\Route\RouteCollectionInterface as IRouteCollection;
@@ -40,12 +37,6 @@ class Router implements IRouter
 
     /**
      * @Inject
-     * @var IEmitter
-     */
-    private $emitter;
-
-    /**
-     * @Inject
      * @var IView
      */
     private $view;
@@ -57,40 +48,17 @@ class Router implements IRouter
     private $finder;
 
     /**
-     * @Inject
-     * @var IServerRequest
-     */
-    private $request;
-
-    /**
-     * @Inject
-     * @var IResponse
-     */
-    private $response;
-
-    /**
      * @Inject("config")
      * @var StdClass
      */
     private $config;
 
     /** @inheritdoc */
-    public function dispatch()
+    public function dispatch(IServerRequest $request, IResponse $response)
     {
         $this->discoverRoutes();
 
-        try
-        {
-            $output = $this->routes->dispatch($this->request, $this->response);
-        }
-        catch (NotFoundException $e)
-        {
-            $output = $this->buildNotFoundResponse();
-        }
-
-        $this->emitter->emit($output);
-
-        exit;
+        return $this->routes->dispatch($request, $response);
     }
 
     /**
@@ -119,36 +87,25 @@ class Router implements IRouter
             $unBoundClosure = $closure->bindTo(null);
 
             // Call the closure and pass in the RouteCollection as a parameter.
+            // This allows single routes that do not have any dependencies in
+            // order to "define" the route to use the $route parameter directly.
             $routeClosure = call_user_func($unBoundClosure, $this->routes);
 
+            // Or a route file may infact return a closure that will be called
+            // by the container allowing additonal dependencies to be injected
+            // to help with generating routes.
+            //
+            // NOTE: Routes themselves are injectable. So this functionality is
+            // only required when you wish to dynamically register a collection
+            // of routes based on other information from the container.
             if ($routeClosure instanceof \Closure)
             {
                 $this->container->call($routeClosure,
                 [
-                    'route' => $this->routes,
+                    // Route "generators" may depend on the container config.
                     'config' => $this->config
                 ]);
             }
         }
-    }
-
-    /**
-     * Builds a 404 Not Found Response.
-     *
-     * @return IResponse
-     */
-    private function buildNotFoundResponse()
-    {
-        $notFoundResponse = $this->response->withStatus(404, "Not Found");
-
-        $notFoundResponse->getBody()->write
-        (
-            $this->view->render
-            (
-                $this->config->notFound
-            )
-        );
-
-        return $notFoundResponse;
     }
 }

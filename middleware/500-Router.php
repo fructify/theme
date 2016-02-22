@@ -13,17 +13,11 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Removes trailing slashes.
- *
- * Wordpress always likes to append a trailing slash to everything.
- * Having a trailing slash followed by nothing makes no logical sense.
- * It also causes issues for URL re-writing and other link concatination tasks.
- * Thus here we remove the trailing slashes from all permalinks.
- *
- * > NOTE: In the .htaccess file there are also rules to redirect to
- * > non-trailing slash versions of any urls requested.
- */
-$linkFixer = function($link){ return untrailingslashit($link); };
-add_filter('page_link', $linkFixer);
-add_filter('post_type_link', $linkFixer);
+use Fructify\Contracts\IRouter;
+use Psr\Http\Message\ResponseInterface as IResponse;
+use Psr\Http\Message\ServerRequestInterface as IServerRequest;
+
+return function(IServerRequest $request, IResponse $response, callable $next, IRouter $router)
+{
+    return $next($request, $router->dispatch($request, $response));
+};

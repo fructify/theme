@@ -50,4 +50,11 @@ interface IKernel
      * @return boolean
      */
     public function childHasViews();
+
+    /**
+     * If the child theme has a middleware folder this will return true.
+     *
+     * @return boolean
+     */
+    public function childHasMiddleware();
 }

@@ -142,7 +142,7 @@ return
         }
 
         $engine = Foil::boot(['folders' => $folders, 'alias' => 'T'])->engine();
-
+        
         $engine->useData
         ([
             'config' => $c->get('config'),
@@ -150,11 +150,7 @@ return
         ]);
 
         return $engine;
-    })
-
-    // see: https://github.com/FoilPHP/Foil/issues/31
-    // When this issue is fixed, we should be able to remove this line.
-    ->scope(DI\Scope::PROTOTYPE),
+    }),
 
     // Map Interfaces to Classes
     // -------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 	},
 	"require":
 	{
-		"foil/foil": "^0.6.3",
+		"foil/foil": "dev-master",
 		"php-di/php-di": "^5.2",
 		"symfony/finder": "^2.5",
 		"athari/yalinqo": "^2.4",

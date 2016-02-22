@@ -109,7 +109,9 @@ class Kernel implements IKernel
     }
 
     private function registerHook($file)
-    {Finder::create()
+    {
+        // Create a closure that will include the hook file.
+        $closure = function() use ($file) { return require($file); };
 
         // Unbind the closure from this class.
         // ie: Make it so in the included file ```$this``` is undefined.

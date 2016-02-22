@@ -13,11 +13,11 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-use Symfony\Component\Finder\Finder;
 use Foil\Contracts\EngineInterface as IView;
 use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 use League\Route\RouteCollectionInterface as IRouteCollection;
+use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
 
 /**
  * Default Route Generator.
@@ -34,7 +34,7 @@ use League\Route\RouteCollectionInterface as IRouteCollection;
  * 	  It will then add a route for that pages's permalink.
  * 	  This theme completely ignores "posts".
  */
-return function(IRouteCollection $route, Finder $finder, $config)
+return function(IRouteCollection $route, IFinderFactory $finder, $config)
 {
 	/*
 	 * Add the default root route.
@@ -57,7 +57,7 @@ return function(IRouteCollection $route, Finder $finder, $config)
 	$childPages = $config->paths->theme->child->views.'/pages';
 
 	// Find all files in our pages folder.
-	$files = $finder->files()->name('*.php')->in($parentPages);
+	$files = $finder->create()->files()->name('*.php')->in($parentPages);
 
 	// If the we have a child theme and it has a pages folder,
 	// lets find all files in that folder too.

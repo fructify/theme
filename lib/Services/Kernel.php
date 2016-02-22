@@ -17,6 +17,7 @@ use Fructify\Contracts\IKernel;
 use Fructify\Contracts\IRouter;
 use Symfony\Component\Finder\Finder;
 use Interop\Container\ContainerInterface as IContainer;
+use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
 
 class Kernel implements IKernel
 {
@@ -28,7 +29,7 @@ class Kernel implements IKernel
 
     /**
      * @Inject
-     * @var Finder
+     * @var IFinderFactory
      */
     private $finder;
 

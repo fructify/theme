@@ -13,7 +13,6 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-use Symfony\Component\Finder\Finder;
 use League\Route\Http\Exception\NotFoundException;
 
 use Fructify\Contracts\IRouter;
@@ -23,6 +22,7 @@ use Zend\Diactoros\Response\EmitterInterface as IEmitter;
 use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 use League\Route\RouteCollectionInterface as IRouteCollection;
+use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
 
 class Router implements IRouter
 {
@@ -52,7 +52,7 @@ class Router implements IRouter
 
     /**
      * @Inject
-     * @var Finder
+     * @var IFinderFactory
      */
     private $finder;
 
@@ -103,7 +103,7 @@ class Router implements IRouter
         // Where are our routes located?
         $parentRoutes = $this->config->paths->theme->parent->routes;
         $childRoutes = $this->config->paths->theme->child->routes;
-        $files = $this->finder->files()->name('*.php')->in($parentRoutes);
+        $files = $this->finder->create()->files()->name('*.php')->in($parentRoutes);
         if ($parentRoutes != $childRoutes && is_dir($childRoutes))
         {
             $files = $files->in($childRoutes);

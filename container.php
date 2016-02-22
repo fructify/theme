@@ -21,7 +21,7 @@ use Zend\Diactoros\ServerRequestFactory as R;
 use Zend\Diactoros\Response\SapiEmitter;
 use League\Route\RouteCollection;
 use League\Route\Strategy\ParamStrategy;
-use Symfony\Component\Finder\Finder;
+use Dflydev\Symfony\FinderFactory;
 
 // Import interfaces
 use Fructify\Contracts;
@@ -29,6 +29,7 @@ use Foil\Contracts\EngineInterface as IView;
 use Interop\Container\ContainerInterface as IContainer;
 use Zend\Diactoros\Response\EmitterInterface as IEmitter;
 use League\Route\Strategy\StrategyInterface as IStrategy;
+use Dflydev\Symfony\FinderFactoryInterface as IFinderFactory;
 use League\Route\RouteCollectionInterface as IRouteCollection;
 use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
@@ -157,7 +158,7 @@ return
     // Here we define some additional interface to class mappings.
     // -------------------------------------------------------------------------
     IEmitter::class => DI\object(SapiEmitter::class),
-    Finder::class => DI\object()->scope(DI\Scope::PROTOTYPE),
+    IFinderFactory::class => DI\object(FinderFactory::class),
     IResponse::class => DI\object(Response::class)->scope(DI\Scope::PROTOTYPE),
     Contracts\IRouter::class => DI\object(Services\Router::class),
     Contracts\IKernel::class => DI\object(Services\Kernel::class)

@@ -1,64 +1,74 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
-//             ___________                     __   __  _____                   
-//             \_   _____/______ __ __   _____/  |_|__|/ ____\__ __             
-//              |    __) \_  __ \  |  \_/ ___\   __\  \   __<   |  |            
-//              |     \   |  | \/  |  /\  \___|  | |  ||  |  \___  |            
-//              \___  /   |__|  |____/  \___  >__| |__||__|  / ____|            
-//                  \/                      \/               \/                 
+//             ___________                     __   __  _____
+//             \_   _____/______ __ __   _____/  |_|__|/ ____\__ __
+//              |    __) \_  __ \  |  \_/ ___\   __\  \   __<   |  |
+//              |     \   |  | \/  |  /\  \___|  | |  ||  |  \___  |
+//              \___  /   |__|  |____/  \___  >__| |__||__|  / ____|
+//                  \/                      \/               \/
 // -----------------------------------------------------------------------------
-//                          https://github.com/fructify                         
-//                                                                              
-//          Designed and Developed by Brad Jones <brad @="bjc.id.au" />         
+//                          https://github.com/fructify
+//
+//          Designed and Developed by Brad Jones <brad @="bjc.id.au" />
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-// Make sure we are being called inside the WordPress environment.
-if (!defined('ABSPATH')) exit;
+use DI\ContainerBuilder;
+use Stringy\Stringy as s;
+use Fructify\Contracts\IKernel;
 
-/*
- * Some people may use this theme, separate from the main WordPress project.
- * For more info on the WordPress composer project, checkout:
- * 
- *     https://github.com/fructify/wordpress
- * 
- * So it is possible that the composer autoloader has not yet been required.
- * Lets test if we can find our bootloader class. If the class does not exist
- * we need to install the composer autoloader.
+/**
+ * The Theme IoC Container.
+ *
+ * Wrap everything up into a closure because the global scope is already pretty
+ * crowded being a wordpress environment and all... :) Additonally it stops
+ * anyone from cheating and say requesting the IoC Container by using something
+ * like ```$GLOBALS['app']```.
  */
-if (!class_exists('Fructify\Bootloader'))
+call_user_func(function()
 {
-	// We make the assumption that the vendors dir is at the root
-	$autoloader = ABSPATH.'/vendor/autoload.php';
+    $builder = new ContainerBuilder();
 
-	// Check to see if it's there
-	if (file_exists($autoloader))
-	{
-		require($autoloader);
-	}
-	else
-	{
-		// Houston... We Have A Problem!
-		throw new RuntimeException
-		(
-			'The Composer Autoloader Could Not Be Found @ '.$autoloader
-		);
-	}
-}
+    // We will enable @Inject annotation support. Between autowiring &
+    // annotations I am hoping we won't need to have much in the way of
+    // custom definitions in the ```container.php``` file.
+    // http://php-di.org/doc/annotations.html
+    $builder->useAnnotations(true);
 
-/*
- * According to the wordpress documenation a child theme's functions.php file
- * will be included before the parent theme. So we need a way to work out
- * if our bootloader has already been run or not.
- * 
- * For more info on child themes see: http://codex.wordpress.org/Child_Themes
- */
-if (!Fructify\Bootloader::isBooted())
-{
-	/*
-	 * If there is no child theme or the child theme
-	 * has no requirement for a custom boot loader.
-	 * We will run the Bootloader now.
-	 */
-	new Fructify\Bootloader();
-}
+    // Add our definitions from ```container.php```.
+    $closure = function(){ return require(__DIR__.'/container.php'); };
+    $definitions = call_user_func($closure->bindTo(null));
+    $builder->addDefinitions($definitions);
+
+    // Grab the config object so we can use it to build the container.
+    $config = $definitions['config'];
+
+    // Add definitions from a child theme that might exist.
+    $parentThemePath = $config->paths->theme->parent->root;
+    $childThemePath = $config->paths->theme->child->root;
+    if ($parentThemePath != $childThemePath)
+	{
+        $childContainer = $childThemePath.'/container.php';
+
+        if (file_exists($childContainer))
+        {
+            $closure = function() use ($childContainer)
+            {
+                return require($childContainer);
+            };
+
+            $builder->addDefinitions(call_user_func($closure->bindTo(null)));
+        }
+	}
+
+    // If running on staging or production we will make
+    // sure the container is cached for maximum performance.
+    if (s::create($config->hosting->env)->containsAny(['staging','production']))
+    {
+        $builder->writeProxiesToFile(true, $config->paths->cache.'/proxies');
+        $builder->setDefinitionCache($config->definitionCache->__invoke());
+    }
+
+    // Boot our theme kernel.
+    $builder->build()->get(IKernel::class)->boot();
+});

@@ -1,6 +1,6 @@
-@extends('layouts.master')
+<?php $T->layout('layouts/master') ?>
 
-@section('main')
+<?php $T->section('main') ?>
 
 	<div class="page-title"><h1><?php the_title(); ?></h1></div>
 	<div class="page-content">
@@ -9,4 +9,4 @@
 		</article>
 	</div>
 
-@stop
+<?php $T->stop() ?>

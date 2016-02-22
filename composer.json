@@ -1,9 +1,9 @@
 {
 	"name":"fructify/theme",
 	"type":"wordpress-theme",
-	"description": "A WordPress theme with Laravel API Goodness :) ",
+	"description": "A WordPress theme with Modern PHP Goodness :)",
 	"homepage": "https://github.com/fructify/theme",
-	"keywords": ["fructify", "wordpress", "laravel"],
+	"keywords": ["fructify", "wordpress", "psr-7", "middleware"],
 	"license": "MIT",
 	"autoload":
 	{
@@ -14,10 +14,16 @@
 	},
 	"require":
 	{
+		"foil/foil": "^0.6.3",
+		"php-di/php-di": "^5.2",
+		"symfony/finder": "^2.5",
+		"athari/yalinqo": "^2.4",
+		"doctrine/cache": "^1.6",
+		"league/route": "2.0.0-RC1",
 		"composer/installers": "^1.0",
-		"league/plates": "^3.1",
-		"league/route": "^1.2",
-		"php-di/php-di": "^5.2"
+		"doctrine/annotations": "^1.2",
+		"danielstjules/stringy": "^2.2",
+		"zendframework/zend-diactoros": "^1.3"
 	},
 	"extra":
 	{

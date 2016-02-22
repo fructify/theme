@@ -13,7 +13,7 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
-// Import concreations
+// Import concretions
 use Foil\Foil;
 use Fructify\Services;
 use Zend\Diactoros\Response;
@@ -142,7 +142,7 @@ return
         }
 
         $engine = Foil::boot(['folders' => $folders, 'alias' => 'T'])->engine();
-        
+
         $engine->useData
         ([
             'config' => $c->get('config'),

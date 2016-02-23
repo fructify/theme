@@ -87,6 +87,7 @@ return function(IRouteCollection $route, IFinderFactory $finder, $config)
 	{
 		// Grab the URI from the permalink of the post object.
 		$uri = rtrim(parse_url(get_permalink($post->ID), PHP_URL_PATH), '/');
+		if ($uri == "") $uri = "/";
 
 		$route->get($uri, function(IResponse $response, IView $view) use ($uri, $post)
 		{

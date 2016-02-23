@@ -60,14 +60,7 @@ return
     // -------------------------------------------------------------------------
     'config' => DI\factory(function()
     {
-        $aToO = function($x) use (&$aToO)
-        {
-            if (is_array($x)) return (object)array_map($aToO, $x);
-            else return $x;
-        };
-
-        $childConfig = [];
-        $parentConfig = import(__DIR__.'/config.php');
+        $childConfig = []; $parentConfig = import(__DIR__.'/config.php');
 
         $parentThemePath = $parentConfig['paths']['theme']['parent']['root'];
         $childThemePath = $parentConfig['paths']['theme']['child']['root'];
@@ -81,7 +74,13 @@ return
                 $childConfig = import($childConfigPath);
             }
         }
-        
+
+        $aToO = function($x) use (&$aToO)
+        {
+            if (is_array($x)) return (object)array_map($aToO, $x);
+            else return $x;
+        };
+
         return $aToO(array_merge_recursive($parentConfig, $childConfig));
     }),
 
@@ -103,7 +102,18 @@ return
 
     // Setup Aura Session
     // -------------------------------------------------------------------------
-    // TODO...
+    // We are using the Aura Session package to provide a nice session api,
+    // with all the modern things (ie: flash messages) we have come to expect
+    // after using frameworks like Laravel.
+    //
+    // see: https://github.com/auraphp/Aura.Session
+    //
+    // NOTE: Aura Session does not provide any custom storage backend.
+    // It simply wraps around PHP's provided $_SESSION super globals and
+    // associated API. So if you want to store sessions in say a mysql database
+    // you should setup your own SessionHandler.
+    //
+    // see: http://php.net/manual/en/class.sessionhandler.php
     // -------------------------------------------------------------------------
     Session::class => DI\factory(function(IContainer $c)
     {
@@ -119,7 +129,20 @@ return
         return $session;
     }),
 
-    // Typehint against this interface, if you only need one "segment".
+    // Session Segment
+    // -------------------------------------------------------------------------
+    // Aura Session works with segments, basically nested arrays within the
+    // $_SESSION super global. Aura Session also doesn't provide an interface
+    // for the "Session Manager" but it does for a SessionSegment.
+    //
+    // So I have decided that we will setup a global segment, this will allow
+    // hooks, middleware & routes to easily depend on the SegmentInterface.
+    // I am yet to run into an issue with Session variable collisions.
+    //
+    // If you do need to create a new segment, or perform some other task, like
+    // regenerating the session id, you can always depend on the concrete
+    // Session class.
+    // -------------------------------------------------------------------------
     ISession::class => DI\factory(function(IContainer $c)
     {
         return $c->get(Session::class)->getSegment

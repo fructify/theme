@@ -29,7 +29,16 @@ return
 
     // Session Settings
     // -------------------------------------------------------------------------
-    // TODO...
+    // These defaults should work for 99% of cases.
+    // Obviously the child theme can override these settings easily.
+    //
+    // The session name is used by ```session_name```.
+    // http://php.net/manual/en/function.session-name.php
+    //
+    // It is also used to define the name of Aura.Session segment.
+    //
+    // Refer to the PHP documenation for the cookie settings.
+    // http://php.net/manual/en/function.session-set-cookie-params.php
     // -------------------------------------------------------------------------
     'session' =>
     [

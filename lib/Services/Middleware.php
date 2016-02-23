@@ -144,23 +144,15 @@ class Middleware implements IMiddleware
      */
     private function resolve($file)
     {
-        $require = function() use ($file) { return require($file); };
-
-        return function(IServerRequest $request, IResponse $response, callable $next) use ($require)
+        return function(IServerRequest $request, IResponse $response, callable $next) use ($file)
         {
-            return $this->container->call
-            (
-                call_user_func($require->bindTo(null)),
-                [
-                    // Pass on the middleware objects
-                    'request' => $request,
-                    'response' => $response,
-                    'next' => $next,
-
-                    // Also allow middleware to depend on the container config
-                    'config' => $this->config
-                ]
-            );
+            return $this->container->call(import($file),
+            [
+                'request' => $request,
+                'response' => $response,
+                'next' => $next,
+                'config' => $this->config
+            ]);
         };
     }
 }

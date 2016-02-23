@@ -60,30 +60,28 @@ return
     // -------------------------------------------------------------------------
     'config' => DI\factory(function()
     {
-        $closure = function(){ return require(__DIR__.'/config.php'); };
         $aToO = function($x) use (&$aToO)
         {
             if (is_array($x)) return (object)array_map($aToO, $x);
             else return $x;
         };
+
         $childConfig = [];
-        $parentConfig = call_user_func($closure->bindTo(null));
+        $parentConfig = import(__DIR__.'/config.php');
+
         $parentThemePath = $parentConfig['paths']['theme']['parent']['root'];
         $childThemePath = $parentConfig['paths']['theme']['child']['root'];
+
         if ($parentThemePath != $childThemePath)
     	{
             $childConfigPath = $childThemePath.'/config.php';
 
             if (file_exists($childConfigPath))
             {
-                $closure = function() use ($childConfigPath)
-                {
-                    return require($childConfigPath);
-                };
-
-                $childConfig = call_user_func($closure->bindTo(null));
+                $childConfig = import($childConfigPath);
             }
         }
+        
         return $aToO(array_merge_recursive($parentConfig, $childConfig));
     }),
 

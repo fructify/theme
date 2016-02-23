@@ -79,32 +79,11 @@ class Router implements IRouter
 
         foreach ($files->sortByName() as $file)
         {
-            // Create a closure that will include the route file.
-            $closure = function($route) use ($file) { return include($file); };
+            $route = import($file, ['route' => $this->routes]);
 
-            // Unbind the closure from this class.
-            // ie: Make it so in the included file ```$this``` is undefined.
-            $unBoundClosure = $closure->bindTo(null);
-
-            // Call the closure and pass in the RouteCollection as a parameter.
-            // This allows single routes that do not have any dependencies in
-            // order to "define" the route to use the $route parameter directly.
-            $routeClosure = call_user_func($unBoundClosure, $this->routes);
-
-            // Or a route file may infact return a closure that will be called
-            // by the container allowing additonal dependencies to be injected
-            // to help with generating routes.
-            //
-            // NOTE: Routes themselves are injectable. So this functionality is
-            // only required when you wish to dynamically register a collection
-            // of routes based on other information from the container.
-            if ($routeClosure instanceof \Closure)
+            if (is_callable($route))
             {
-                $this->container->call($routeClosure,
-                [
-                    // Route "generators" may depend on the container config.
-                    'config' => $this->config
-                ]);
+                $this->container->call($route, ['config' => $this->config]);
             }
         }
     }

@@ -123,29 +123,11 @@ class Kernel implements IKernel
      */
     private function registerHook($file)
     {
-        // Create a closure that will include the hook file.
-        $closure = function() use ($file) { return require($file); };
+        $hook = import($file);
 
-        // Unbind the closure from this class.
-        // ie: Make it so in the included file ```$this``` is undefined.
-        $unBoundClosure = $closure->bindTo(null);
-
-        // Call the closure, it can return the actual hook closure.
-        // This is so hooks may have dependecies injected into them.
-        // Sometimes though, hooks are super simple and don't require
-        // any dependecies in which case they do not need to return a
-        // closure and can add their hooks directly.
-        $hookClosure = call_user_func($unBoundClosure);
-
-        // Now use the container to call the hook closure.
-        // php-di will inject dependecies as needed.
-        if ($hookClosure instanceof \Closure)
+        if (is_callable($hook))
         {
-            $this->container->call($hookClosure,
-            [
-                // Hooks may also depend on the container config
-                'config' => $this->config
-            ]);
+            $this->container->call($hook, ['config' => $this->config]);
         }
     }
 }

@@ -17,6 +17,10 @@ use DI\ContainerBuilder;
 use Stringy\Stringy as s;
 use Fructify\Contracts\IKernel;
 
+// Install the import function globally.
+// see: https://github.com/brad-jones/import/
+Brads\Importer::globalise();
+
 /**
  * The Theme IoC Container.
  *
@@ -36,9 +40,7 @@ call_user_func(function()
     $builder->useAnnotations(true);
 
     // Add our definitions from ```container.php```.
-    $closure = function(){ return require(__DIR__.'/container.php'); };
-    $definitions = call_user_func($closure->bindTo(null));
-    $builder->addDefinitions($definitions);
+    $builder->addDefinitions(import(__DIR__.'/container.php'));
 
     // Grab the config object so we can use it to build the container.
     $config = $definitions['config'];
@@ -52,12 +54,7 @@ call_user_func(function()
 
         if (file_exists($childContainer))
         {
-            $closure = function() use ($childContainer)
-            {
-                return require($childContainer);
-            };
-
-            $builder->addDefinitions(call_user_func($closure->bindTo(null)));
+            $builder->addDefinitions(import($childContainer));
         }
 	}
 

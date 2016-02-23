@@ -40,10 +40,11 @@ call_user_func(function()
     $builder->useAnnotations(true);
 
     // Add our definitions from ```container.php```.
-    $builder->addDefinitions(import(__DIR__.'/container.php'));
+    $definitions = import(__DIR__.'/container.php');
+    $builder->addDefinitions($definitions);
 
     // Grab the config object so we can use it to build the container.
-    $config = $definitions['config'];
+    $config = $definitions['config']->__invoke();
 
     // Add definitions from a child theme that might exist.
     $parentThemePath = $config->paths->theme->parent->root;

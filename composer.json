@@ -14,7 +14,7 @@
 	},
 	"require":
 	{
-		"foil/foil": "dev-master",
+		"foil/foil": "^0.6.4",
 		"aura/session": "^2.0",
 		"filp/whoops": "^2.0",
 		"relay/relay": "^1.1",

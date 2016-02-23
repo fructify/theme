@@ -58,7 +58,7 @@ return
     // this config object but the config object it's self should never be
     // "Located", it should always be injected.
     // -------------------------------------------------------------------------
-    'config' => DI\factory(function()
+    'config' => function()
     {
         $childConfig = []; $parentConfig = import(__DIR__.'/config.php');
 
@@ -82,7 +82,7 @@ return
         };
 
         return $aToO(array_merge_recursive($parentConfig, $childConfig));
-    }),
+    },
 
     // Bind the container to it's self.
     // -------------------------------------------------------------------------

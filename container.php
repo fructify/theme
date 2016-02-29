@@ -194,7 +194,14 @@ return
             $folders = [$childViews, $parentViews];
         }
 
-        $engine = Foil::boot(['folders' => $folders, 'alias' => 'T'])->engine();
+        $config =
+        [
+            'folders' => $folders,
+            'alias' => 'T',
+            'autoescape' => false
+        ];
+        
+        $engine = Foil::boot($config)->engine();
 
         $engine->useData
         ([

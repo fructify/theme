@@ -63,8 +63,14 @@ call_user_func(function()
     // sure the container is cached for maximum performance.
     if (s::create($config->hosting->env)->containsAny(['staging','production']))
     {
+        $builder->setDefinitionCache
+        (
+            $config->cache->container->driver->__invoke($config)
+        );
+
+        // NOTE: This would only be used in the case there are lazy injections.
+        // see: http://php-di.org/doc/lazy-injection.html
         $builder->writeProxiesToFile(true, $config->paths->cache.'/proxies');
-        $builder->setDefinitionCache($config->definitionCache->__invoke());
     }
 
     // Boot our theme kernel.

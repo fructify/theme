@@ -81,7 +81,7 @@ return
     [
         'root' => ABSPATH,
         'uploads' => ABSPATH.'/wp-content/uploads',
-        'cache' => ABSPATH.'/wp-content/uploads/di-cache',
+        'cache' => ABSPATH.'/wp-content/uploads/cache',
         'theme' =>
         [
             'parent' =>
@@ -135,7 +135,7 @@ return
         [
             'driver' => function($config)
             {
-                return new FilesystemCache($config->paths->cache);
+                return new FilesystemCache($config->paths->cache.'/di');
             }
         ]
     ]

@@ -13,6 +13,7 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
+use YaLinqo\Enumerable as Linq;
 use Fructify\Contracts\IRouter;
 use Foil\Contracts\EngineInterface as IView;
 use Interop\Container\ContainerInterface as IContainer;
@@ -77,9 +78,25 @@ class Router implements IRouter
             $files = $files->in($childRoutes);
         }
 
-        foreach ($files->sortByName() as $file)
+        // Collect all the files
+        $splFiles = []; foreach ($files as $file) $splFiles[] = $file;
+
+        // Now we need to sort them ourselves because it seems Finder's
+        // sortByName(), only sorts per in('dir') and not across the
+        // entire list.
+        $orderedFiles = Linq::from($splFiles)->orderBy('$v', function($a, $b)
         {
-            $route = import($file, ['route' => $this->routes]);
+            return strnatcasecmp
+            (
+                $a->getBasename('.php'),
+                $b->getBasename('.php')
+            );
+        });
+
+        // Finally lets add some routes.
+        foreach ($orderedFiles as $file)
+        {
+            $route = import($file->getRealPath(), ['route' => $this->routes]);
 
             if (is_callable($route))
             {

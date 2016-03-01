@@ -15,6 +15,9 @@
 
 use League\Route\Route;
 use League\Route\RouteCollection as LeagueRouteCollection;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Fructify\Services\Dispatcher as FructifyDispatcher;
 
 class RouteCollection extends LeagueRouteCollection
 {
@@ -31,5 +34,19 @@ class RouteCollection extends LeagueRouteCollection
         $this->routes[$path] = $route;
 
         return $route;
+    }
+
+    /**
+     * {@inheritdoc}, however we need to provide our own custom dispatcher.
+     */
+    public function getDispatcher(ServerRequestInterface $request)
+    {
+        // NOTE: We don't need to worry about setting the
+        // strategy the container does that for us.
+
+        $this->prepRoutes($request);
+
+        return (new FructifyDispatcher($this->getData()))
+        ->setStrategy($this->getStrategy());
     }
 }

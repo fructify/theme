@@ -197,10 +197,9 @@ return
         $config =
         [
             'folders' => $folders,
-            'alias' => 'T',
             'autoescape' => false
         ];
-        
+
         $engine = Foil::boot($config)->engine();
 
         $engine->useData

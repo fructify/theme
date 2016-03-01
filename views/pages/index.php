@@ -1,6 +1,6 @@
-<?php $T->layout('layouts/master') ?>
+<?php $this->layout('layouts/master') ?>
 
-<?php $T->section('main') ?>
+<?php $this->section('main') ?>
 
 	<div class="page-title"><h1>Welcome to Fructify</h1></div>
 	<div class="page-content">
@@ -15,4 +15,4 @@
 		</article>
 	</div>
 
-<?php $T->stop() ?>
+<?php $this->stop() ?>

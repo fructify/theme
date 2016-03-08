@@ -23,7 +23,7 @@
 		"athari/yalinqo": "^2.4",
 		"doctrine/cache": "^1.6",
 		"league/route": "2.0.0-RC1",
-		"brad-jones/import": "^0.0.3",
+		"brad-jones/import": "^0.0.4",
 		"composer/installers": "^1.0",
 		"doctrine/annotations": "^1.2",
 		"danielstjules/stringy": "^2.2",

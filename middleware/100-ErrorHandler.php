@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 
 return function(IServerRequest $request, IResponse $response, callable $next, IView $view, $config)
 {
-    if ($config->hosting->env == "production")
+    if ($config->hosting->env != "local")
     {
         $errorHandler = new ErrorHandler
         (

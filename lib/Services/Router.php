@@ -1,4 +1,4 @@
-<?php namespace Fructify\Services;
+<?php declare(strict_types=1);
 ////////////////////////////////////////////////////////////////////////////////
 //             ___________                     __   __  _____
 //             \_   _____/______ __ __   _____/  |_|__|/ ____\__ __
@@ -12,6 +12,8 @@
 //          Designed and Developed by Brad Jones <brad @="bjc.id.au" />
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
+
+namespace Fructify\Services;
 
 use YaLinqo\Enumerable as Linq;
 use Fructify\Contracts\IRouter;

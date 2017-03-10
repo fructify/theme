@@ -1,39 +1,39 @@
 {
-	"name":"fructify/theme",
-	"type":"wordpress-theme",
-	"description": "A WordPress theme with Modern PHP Goodness :)",
-	"homepage": "https://github.com/fructify/theme",
-	"keywords": ["fructify", "wordpress", "psr-7", "middleware"],
-	"license": "MIT",
-	"autoload":
-	{
-		"psr-4":
-		{
-			"Fructify\\": "./lib"
-		}
-	},
-	"require":
-	{
-		"foil/foil": "^0.6.4",
-		"aura/session": "^2.0",
-		"filp/whoops": "^2.0",
-		"relay/relay": "^1.1",
-		"php-di/php-di": "^5.2",
-		"symfony/finder": "^2.5",
-		"athari/yalinqo": "^2.4",
-		"doctrine/cache": "^1.6",
-		"league/route": "^2.0.0",
-		"brad-jones/import": "^0.0.4",
-		"composer/installers": "^1.0",
-		"doctrine/annotations": "^1.2",
-		"danielstjules/stringy": "^2.2",
-		"willdurand/negotiation": "^2.0",
-		"oscarotero/psr7-middlewares": "^3.0",
-		"zendframework/zend-diactoros": "^1.3",
-		"dflydev/symfony-finder-factory": "^1.0"
-	},
-	"extra":
-	{
-		"installer-name": "fructify"
-	}
+    "name":"fructify/theme",
+    "type":"wordpress-theme",
+    "description": "A WordPress theme with Modern PHP Goodness :)",
+    "homepage": "https://github.com/fructify/theme",
+    "keywords": ["fructify", "wordpress", "psr-7", "middleware"],
+    "license": "MIT",
+    "autoload":
+    {
+        "psr-4":
+        {
+            "Fructify\\": "./lib"
+        }
+    },
+    "require":
+    {
+        "foil/foil": "^0.6.4",
+        "aura/session": "^2.0",
+        "filp/whoops": "^2.0",
+        "relay/relay": "^1.1",
+        "php-di/php-di": "^5.2",
+        "symfony/finder": "^2.5",
+        "athari/yalinqo": "^2.4",
+        "doctrine/cache": "^1.6",
+        "league/route": "^2.0.0",
+        "brad-jones/import": "^0.0.4",
+        "composer/installers": "^1.0",
+        "doctrine/annotations": "^1.2",
+        "danielstjules/stringy": "^2.2",
+        "willdurand/negotiation": "^2.0",
+        "oscarotero/psr7-middlewares": "^3.0",
+        "zendframework/zend-diactoros": "^1.3",
+        "dflydev/symfony-finder-factory": "^1.0"
+    },
+    "extra":
+    {
+        "installer-name": "fructify"
+    }
 }

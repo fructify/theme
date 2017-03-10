@@ -66,7 +66,7 @@ return
         $childThemePath = $parentConfig['paths']['theme']['child']['root'];
 
         if ($parentThemePath != $childThemePath)
-    	{
+        {
             $childConfigPath = $childThemePath.'/config.php';
 
             if (file_exists($childConfigPath))

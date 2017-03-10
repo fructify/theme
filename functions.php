@@ -50,14 +50,14 @@ call_user_func(function()
     $parentThemePath = $config->paths->theme->parent->root;
     $childThemePath = $config->paths->theme->child->root;
     if ($parentThemePath != $childThemePath)
-	{
+    {
         $childContainer = $childThemePath.'/container.php';
 
         if (file_exists($childContainer))
         {
             $builder->addDefinitions(import($childContainer));
         }
-	}
+    }
 
     // If running on staging or production we will make
     // sure the container is cached for maximum performance.

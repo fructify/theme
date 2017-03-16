@@ -13,8 +13,8 @@
 // -----------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
+use Gears\String\Str;
 use DI\ContainerBuilder;
-use Stringy\Stringy as s;
 use Fructify\Contracts\IKernel;
 
 // Install the import function globally.
@@ -61,7 +61,7 @@ call_user_func(function()
 
     // If running on staging or production we will make
     // sure the container is cached for maximum performance.
-    if (s::create($config->hosting->env)->containsAny(['staging','production']))
+    if (Str::s($config->hosting->env)->containsAny(['staging','production']))
     {
         $builder->setDefinitionCache
         (

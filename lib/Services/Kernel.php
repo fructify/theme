@@ -15,6 +15,8 @@
 
 namespace Fructify\Services;
 
+use stdClass;
+use DI\Annotation\Inject;
 use Fructify\Contracts\IKernel;
 use Interop\Container\ContainerInterface as IContainer;
 use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
@@ -25,19 +27,19 @@ class Kernel implements IKernel
      * @Inject
      * @var IContainer
      */
-    private $container;
+    protected $container;
 
     /**
      * @Inject
      * @var IFinderFactory
      */
-    private $finder;
+    protected $finder;
 
     /**
      * @Inject("config")
-     * @var StdClass
+     * @var stdClass
      */
-    private $config;
+    protected $config;
 
     /** @inheritdoc */
     public function boot()
@@ -123,7 +125,7 @@ class Kernel implements IKernel
      * @param  string $file The filepath to where the hook exists.
      * @return void
      */
-    private function registerHook($file)
+    protected function registerHook($file)
     {
         $hook = import($file);
 

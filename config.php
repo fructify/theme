@@ -90,6 +90,7 @@ return
                 'hooks' => __DIR__.'/hooks',
                 'views' => __DIR__.'/views',
                 'routes' => __DIR__.'/routes',
+                'assets' => __DIR__.'/assets/dist',
                 'middleware' => __DIR__.'/middleware'
             ],
             'child' =>
@@ -98,7 +99,32 @@ return
                 'hooks' => get_stylesheet_directory().'/hooks',
                 'views' => get_stylesheet_directory().'/views',
                 'routes' => get_stylesheet_directory().'/routes',
+                'assets' => get_stylesheet_directory().'/assets/dist',
                 'middleware' => get_stylesheet_directory().'/middleware'
+            ]
+        ]
+    ],
+
+    // Common URL Paths
+    // -------------------------------------------------------------------------
+    // Here we define some commonly used URL paths.
+    // -------------------------------------------------------------------------
+    'urls' =>
+    [
+        'root' => get_site_url(),
+        'uploads' => wp_upload_dir()['baseurl'],
+        'cache' => wp_upload_dir()['baseurl'].'/cache',
+        'theme' =>
+        [
+            'parent' =>
+            [
+                'root' => get_template_directory_uri(),
+                'assets' => get_template_directory_uri().'/assets/dist'
+            ],
+            'child' =>
+            [
+                'root' => get_stylesheet_directory_uri(),
+                'assets' => get_stylesheet_directory_uri().'/assets/dist'
             ]
         ]
     ],

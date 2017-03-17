@@ -17,26 +17,23 @@
 use Foil\Foil;
 use Fructify\Services;
 use Aura\Session\Session;
-use Aura\Session\SessionFactory;
 use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequestFactory as R;
+use Aura\Session\SessionFactory;
 use Zend\Diactoros\Response\SapiEmitter;
-use League\Route\RouteCollection;
 use League\Route\Strategy\ParamStrategy;
+use Zend\Diactoros\ServerRequestFactory as R;
 use Dflydev\Symfony\FinderFactory\FinderFactory;
 
 // Import interfaces
 use Fructify\Contracts;
-use Aura\Session\SegmentInterface as ISession;
 use Foil\Contracts\EngineInterface as IView;
-use Fructify\Contracts\IMiddleware;
+use Aura\Session\SegmentInterface as ISession;
+use Psr\Http\Message\ResponseInterface as IResponse;
 use Interop\Container\ContainerInterface as IContainer;
 use Zend\Diactoros\Response\EmitterInterface as IEmitter;
-use League\Route\Strategy\StrategyInterface as IStrategy;
-use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 use League\Route\RouteCollectionInterface as IRouteCollection;
-use Psr\Http\Message\ResponseInterface as IResponse;
 use Psr\Http\Message\ServerRequestInterface as IServerRequest;
+use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 
 /**
  * IoC Container Definitions.
@@ -207,6 +204,61 @@ return
             'config' => $c->get('config'),
             'request' => $c->get(IServerRequest::class)
         ]);
+
+        $engine->registerFunction('assetUrl', function(string $assetPath) use($c)
+        {
+            // The asset path we are given will be a filename without a caching
+            // busting hash. ie: style.css not styles.c0f1f8b2822e41e382.css
+            // So we need to find the hashed version.
+            $hashedAssetUrl = null;
+
+            // Create a glob pattern for the asset
+            $assetInfo = new \SplFileInfo($assetPath);
+            $glob = $assetInfo->getBasename($assetInfo->getExtension()).
+            '*.'.$assetInfo->getExtension();
+
+            /** @var IFinderFactory $finderFactory */
+            $finderFactory = $c->get(IFinderFactory::class);
+
+            // Lets look for it in the child theme's assets first.
+            $assetsPath = $c->get('config')->paths->theme->child->assets;
+            if (!empty($assetInfo->getPath())) $assetsPath .= '/'.$assetInfo->getPath();
+            if (is_dir($assetsPath))
+            {
+                foreach ($finderFactory->createFinder()->files()->in($assetsPath)->name($glob)->depth('== 0') as $file)
+                {
+                    $assetsUrl = $c->get('config')->urls->theme->child->assets;
+                    if (!empty($assetInfo->getPath())) $assetsUrl .= '/'.$assetInfo->getPath();
+                    $hashedAssetUrl = $assetsUrl.'/'.$file->getRelativePathname();
+                    break;
+                }
+            }
+
+            // Fall back to the parent theme assets folder.
+            if ($hashedAssetUrl === null)
+            {
+                $assetsPath = $c->get('config')->paths->theme->parent->assets;
+                if (!empty($assetInfo->getPath())) $assetsPath .= '/'.$assetInfo->getPath();
+                if (is_dir($assetsPath))
+                {
+                    foreach ($finderFactory->createFinder()->files()->in($assetsPath)->name($glob)->depth('== 0') as $file)
+                    {
+                        $assetsUrl = $c->get('config')->urls->theme->parent->assets;
+                        if (!empty($assetInfo->getPath())) $assetsUrl .= '/'.$assetInfo->getPath();
+                        $hashedAssetUrl = $assetsUrl.'/'.$file->getRelativePathname();
+                        break;
+                    }
+                }
+            }
+
+            // Tell the world we couldn't find the asset
+            if ($hashedAssetUrl === null)
+            {
+                throw new \RuntimeException('Could not locate the asset: '.$assetPath);
+            }
+
+            return $hashedAssetUrl;
+        });
 
         return $engine;
     }),

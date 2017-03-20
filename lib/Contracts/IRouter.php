@@ -28,7 +28,12 @@ interface IRouter
      *
      * 404 Exceptions will be caught and dealt with appropriately.
      *
-     * @return IResponse
+     * @param  IServerRequest $request  The incomming HTTP Request.
+     *
+     * @param  IResponse      $response The HTTP Response instannce.
+     *
+     * @return IResponse                A new HTTP Response instannce,
+     *                                  with content added from router.
      */
-    public function dispatch(IServerRequest $request, IResponse $response);
+    public function dispatch(IServerRequest $request, IResponse $response): IResponse;
 }

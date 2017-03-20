@@ -28,35 +28,35 @@ interface IKernel
     /**
      * If the kernel in running via a child theme then this will return true.
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasChildTheme();
+    public function hasChildTheme(): bool;
 
     /**
      * If the child theme has a hooks folder this will return true.
      *
-     * @return boolean
+     * @return bool
      */
-    public function childHasHooks();
+    public function childHasHooks(): bool;
 
     /**
      * If the child theme has a routes folder this will return true.
      *
-     * @return boolean
+     * @return bool
      */
-    public function childHasRoutes();
+    public function childHasRoutes(): bool;
 
     /**
      * If the child theme has a views folder this will return true.
      *
-     * @return boolean
+     * @return bool
      */
-    public function childHasViews();
+    public function childHasViews(): bool;
 
     /**
      * If the child theme has a middleware folder this will return true.
      *
-     * @return boolean
+     * @return bool
      */
-    public function childHasMiddleware();
+    public function childHasMiddleware(): bool;
 }

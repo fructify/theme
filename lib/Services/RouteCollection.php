@@ -16,15 +16,16 @@
 namespace Fructify\Services;
 
 use League\Route\Route;
-use League\Route\RouteCollection as LeagueRouteCollection;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Fructify\Services\Dispatcher as FructifyDispatcher;
+use League\Route\RouteCollection as LeagueRouteCollection;
 
 class RouteCollection extends LeagueRouteCollection
 {
     /**
-     * {@inheritdoc}, however we allow routes to be overwritten.
+     * @inheritDoc
+     *
+     * However we allow routes to be overwritten.
      */
     public function map($method, $path, $handler)
     {
@@ -39,7 +40,9 @@ class RouteCollection extends LeagueRouteCollection
     }
 
     /**
-     * {@inheritdoc}, however we need to provide our own custom dispatcher.
+     * @inheritDoc
+     *
+     * However we need to provide our own custom dispatcher.
      */
     public function getDispatcher(ServerRequestInterface $request)
     {

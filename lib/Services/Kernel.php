@@ -18,6 +18,7 @@ namespace Fructify\Services;
 use stdClass;
 use DI\Annotation\Inject;
 use Fructify\Contracts\IKernel;
+use Symfony\Component\Finder\SplFileInfo;
 use Interop\Container\ContainerInterface as IContainer;
 use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 
@@ -41,7 +42,6 @@ class Kernel implements IKernel
      */
     protected $config;
 
-    /** @inheritdoc */
     public function boot()
     {
         // Where are our hooks located?
@@ -76,8 +76,7 @@ class Kernel implements IKernel
         }
     }
 
-    /** @inheritdoc */
-    public function hasChildTheme()
+    public function hasChildTheme(): bool
     {
         return
         (
@@ -87,32 +86,28 @@ class Kernel implements IKernel
         );
     }
 
-    /** @inheritdoc */
-    public function childHasHooks()
+    public function childHasHooks(): bool
     {
         if (!$this->hasChildTheme()) return false;
 
         return is_dir($this->config->paths->theme->child->hooks);
     }
 
-    /** @inheritdoc */
-    public function childHasRoutes()
+    public function childHasRoutes(): bool
     {
         if (!$this->hasChildTheme()) return false;
 
         return is_dir($this->config->paths->theme->child->routes);
     }
 
-    /** @inheritdoc */
-    public function childHasViews()
+    public function childHasViews(): bool
     {
         if (!$this->hasChildTheme()) return false;
 
         return is_dir($this->config->paths->theme->child->views);
     }
 
-    /** @inheritdoc */
-    public function childHasMiddleware()
+    public function childHasMiddleware(): bool
     {
         if (!$this->hasChildTheme()) return false;
 
@@ -122,12 +117,12 @@ class Kernel implements IKernel
     /**
      * Registers/Runs a Hook File.
      *
-     * @param  string $file The filepath to where the hook exists.
+     * @param  SplFileInfo $file The filepath to where the hook exists.
      * @return void
      */
-    protected function registerHook($file)
+    protected function registerHook(SplFileInfo $file)
     {
-        $hook = import($file);
+        $hook = import($file->getRealPath());
 
         if (is_callable($hook))
         {

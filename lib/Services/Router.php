@@ -15,6 +15,8 @@
 
 namespace Fructify\Services;
 
+use stdClass;
+use DI\Annotation\Inject;
 use YaLinqo\Enumerable as Linq;
 use Fructify\Contracts\IRouter;
 use Foil\Contracts\EngineInterface as IView;
@@ -52,12 +54,11 @@ class Router implements IRouter
 
     /**
      * @Inject("config")
-     * @var StdClass
+     * @var stdClass
      */
     private $config;
 
-    /** @inheritdoc */
-    public function dispatch(IServerRequest $request, IResponse $response)
+    public function dispatch(IServerRequest $request, IResponse $response): IResponse
     {
         $this->discoverRoutes();
 

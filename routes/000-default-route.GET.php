@@ -15,7 +15,6 @@
 
 use Foil\Contracts\EngineInterface as IView;
 use Psr\Http\Message\ResponseInterface as IResponse;
-use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 use League\Route\RouteCollectionInterface as IRouteCollection;
 use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 

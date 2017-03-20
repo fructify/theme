@@ -15,14 +15,18 @@
 
 namespace Fructify\Services;
 
+use Closure;
+use stdClass;
 use Relay\Runner;
+use DI\Annotation\Inject;
 use YaLinqo\Enumerable as Linq;
 use Fructify\Contracts\IKernel;
 use Fructify\Contracts\IMiddleware;
-use Interop\Container\ContainerInterface as IContainer;
+use Symfony\Component\Finder\SplFileInfo;
 use Psr\Http\Message\ResponseInterface as IResponse;
-use Psr\Http\Message\ServerRequestInterface as IServerRequest;
+use Interop\Container\ContainerInterface as IContainer;
 use Zend\Diactoros\Response\EmitterInterface as IEmitter;
+use Psr\Http\Message\ServerRequestInterface as IServerRequest;
 use Dflydev\Symfony\FinderFactory\FinderFactoryInterface as IFinderFactory;
 
 /**
@@ -70,11 +74,10 @@ class Middleware implements IMiddleware
 
     /**
      * @Inject("config")
-     * @var StdClass
+     * @var stdClass
      */
     private $config;
 
-    /** @inheritdoc */
     public function dispatch()
     {
         $runner = new Runner($this->buildQueue(), function($file)
@@ -97,9 +100,9 @@ class Middleware implements IMiddleware
      * sorted by filename. So the child theme can "insert" it's middleware
      * in the desired order.
      *
-     * @return array
+     * @return string[]
      */
-    private function buildQueue()
+    private function buildQueue(): array
     {
         $queue = [];
 
@@ -141,14 +144,14 @@ class Middleware implements IMiddleware
     /**
      * Used by Relay\Runner when it dispatches the middleware stack.
      *
-     * @param  string $file
+     * @param  SplFileInfo $file
      * @return Closure
      */
-    private function resolve($file)
+    private function resolve(SplFileInfo $file): Closure
     {
         return function(IServerRequest $request, IResponse $response, callable $next) use ($file)
         {
-            return $this->container->call(import($file),
+            return $this->container->call(import($file->getRealPath()),
             [
                 'request' => $request,
                 'response' => $response,

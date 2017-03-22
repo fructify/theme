@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 ////////////////////////////////////////////////////////////////////////////////
 //             ___________                     __   __  _____
 //             \_   _____/______ __ __   _____/  |_|__|/ ____\__ __
@@ -154,11 +154,9 @@ return
     //
     // Couple of things to note:
     //
-    //  - We are using v2 RC1 so the documentation at their site is out of date.
-    //
-    //  - We have also extended the main RouteCollection class to allow the same
-    //    route path to be registered multiple times. Each time over writing the
-    //    previous route. This allows us to provide "default" routes.
+    //  - We have extended the main RouteCollection class to allow the same
+    //    route path to be registered multiple times. Each time over writing
+    //    the previous route. This allows us to provide "default" routes.
     //
     // see: http://route.thephpleague.com/
     // -------------------------------------------------------------------------

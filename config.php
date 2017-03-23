@@ -65,7 +65,8 @@ return
         'pass' => DB_PASSWORD,
         'host' => DB_HOST,
         'charset' => DB_CHARSET,
-        'collate' => DB_COLLATE
+        'collate' => DB_COLLATE,
+        'prefix' => DB_PREFIX
     ],
 
     // Common File Paths

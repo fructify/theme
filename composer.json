@@ -20,6 +20,7 @@
         "gears/string": "^1.1",
         "aura/session": "^2.0",
         "php-di/php-di": "^5.4",
+        "jgrossi/corcel": "^1.4",
         "athari/yalinqo": "^2.4",
         "doctrine/cache": "^1.6",
         "league/route": "^2.0.0",
